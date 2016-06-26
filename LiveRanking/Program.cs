@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BL;
+using BL.Models;
+using DAL.Config;
 using Newtonsoft.Json.Linq;
 
 namespace LiveRanking
@@ -13,32 +16,52 @@ namespace LiveRanking
         private static string _directory = @"C:\Users\Jan\Documents\liveranking";
         static void Main(string[] args)
         {
-            TimeSpan t1 = new TimeSpan(0,0,47,56);
-            TimeSpan t2 = new TimeSpan(0, 0, 50, 48);
-            TimeSpan t3 = new TimeSpan(0, 0, 51, 25);
-            double t4 = (t1 + t2 + t3).TotalSeconds;
-            TimeSpan t5 = TimeSpan.FromSeconds(t4/3);
-            int rank5sum = 7345 + 5170 + 5729 + 4794 + 4419;
+            //TimeSpan t1 = new TimeSpan(0, 0, 47, 56);
+            //TimeSpan t2 = new TimeSpan(0, 0, 50, 48);
+            //TimeSpan t3 = new TimeSpan(0, 0, 51, 25);
+            //double t4 = (t1 + t2 + t3).TotalSeconds;
+            //TimeSpan t5 = TimeSpan.FromSeconds(t4/3);
+            //int rank5sum = 7345 + 5170 + 5729 + 4794 + 4419;
 
-            Calculator calc = new Calculator((int)t4/3,rank5sum/5,0,1,12);
-            List<TimeSpan>list = new List<TimeSpan>();
-            list.Add(t1);
-            list.Add(t2);
-            list.Add(t3);
-            list.Add(new TimeSpan(0,0,52,04));
-            list.Add(new TimeSpan(0,0,54,02));
-            list.Add(new TimeSpan(0,0,57,12));
-            list.Add(new TimeSpan(0,0,57,35));
-            list.Add(new TimeSpan(0,0,57,46));
-            list.Add(new TimeSpan(0,0,61,52));
-            list.Add(new TimeSpan(0,0,65,28));
-            list.Add(new TimeSpan(0,0,66,15));
-            list.Add(new TimeSpan(0,0,69,48));
-            foreach (TimeSpan l in list)
+            //Calculator calc = new Calculator((int)t4/3,rank5sum/5,0,1,12);
+            //List<TimeSpan>list = new List<TimeSpan>();
+            //list.Add(t1);
+            //list.Add(t2);
+            //list.Add(t3);
+            //list.Add(new TimeSpan(0,0,52,04));
+            //list.Add(new TimeSpan(0,0,54,02));
+            //list.Add(new TimeSpan(0,0,57,12));
+            //list.Add(new TimeSpan(0,0,57,35));
+            //list.Add(new TimeSpan(0,0,57,46));
+            //list.Add(new TimeSpan(0,0,61,52));
+            //list.Add(new TimeSpan(0,0,65,28));
+            //list.Add(new TimeSpan(0,0,66,15));
+            //list.Add(new TimeSpan(0,0,69,48));
+            //foreach (TimeSpan l in list)
+            //{
+            //    Console.WriteLine(calc.Calculate((int)l.TotalSeconds, 1));
+            //}
+
+            Competitor c =new Competitor();
+            c.Club = "Lokomotiva Pardubice";
+            c.CompetitorOrisId = 2468;
+            c.Name = "Petr";
+            c.RankingCoeficient = 6958;
+            c.RankingPoints = 2993593;
+            c.RegNo = "LPU9401";
+            c.Surname = "Janů";
+            TestClass.InsertIntoDB(c);
+            using (var db = new LiveRankingDb())
             {
-                Console.WriteLine(calc.Calculate((int)l.TotalSeconds, 1));
+                var query = from p in db.Competitors
+                    select p;
+                foreach (var competitor in query)
+                {
+                    Console.WriteLine($"{competitor.Club}, {competitor.CompetitorOrisId}, {competitor.Name}, {competitor.Surname}, {competitor.RegNo}");
+                }
+                
             }
-            
+            Console.ReadKey();
             /*
             // string response = call.GetEvent(3300);
             string response2 = ApiCalls.GetRankingEvents("2016-06");
