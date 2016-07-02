@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BL.Models;
 using DAL.Config;
 using DAL.Data;
@@ -6,7 +7,7 @@ using DAL.Data;
 namespace BL.Repository
 {
 
-    class RankingResultRepository : BaseRepository<RankingResultDAL, RankingResult>
+    public class RankingResultRepository : BaseRepository<RankingResultDAL, RankingResult>
     {
         protected override IQueryable<RankingResult> GetIQueryable()
         {
@@ -24,6 +25,8 @@ namespace BL.Repository
 
                 });
         }
+
+       
 
         public RankingResultRepository(LiveRankingDb context)
         : base(context, context.RankingResults)

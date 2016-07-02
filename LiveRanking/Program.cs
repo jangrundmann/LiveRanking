@@ -6,7 +6,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BL;
 using BL.Models;
+using BL.Import;
+using BL.Repository;
 using DAL.Config;
+using DAL.Data;
 using Newtonsoft.Json.Linq;
 
 namespace LiveRanking
@@ -42,26 +45,26 @@ namespace LiveRanking
             //    Console.WriteLine(calc.Calculate((int)l.TotalSeconds, 1));
             //}
 
-            Competitor c =new Competitor();
-            c.Club = "Lokomotiva Pardubice";
-            c.CompetitorOrisId = 2468;
-            c.Name = "Petr";
-            c.RankingCoeficient = 6958;
-            c.RankingPoints = 2993593;
-            c.RegNo = "LPU9401";
-            c.Surname = "Janů";
-            TestClass.InsertIntoDB(c);
-            using (var db = new LiveRankingDb())
-            {
-                var query = from p in db.Competitors
-                    select p;
-                foreach (var competitor in query)
-                {
-                    Console.WriteLine($"{competitor.Club}, {competitor.CompetitorOrisId}, {competitor.Name}, {competitor.Surname}, {competitor.RegNo}");
-                }
-                
-            }
-            Console.ReadKey();
+            //Competitor c =new Competitor();
+            //c.Club = "Lokomotiva Pardubice";
+            //c.CompetitorOrisId = 2468;
+            //c.Name = "Petr";
+            //c.RankingCoeficient = 6958;
+            //c.RankingPoints = 2993593;
+            //c.RegNo = "LPU9401";
+            //c.Surname = "Janů";
+            //TestClass.InsertIntoDB(c);
+            //using (var db = new LiveRankingDb())
+            //{
+            //    var query = from p in db.Competitors
+            //        select p;
+            //    foreach (var competitor in query)
+            //    {
+            //        Console.WriteLine($"{competitor.Club}, {competitor.CompetitorOrisId}, {competitor.Name}, {competitor.Surname}, {competitor.RegNo}");
+            //    }
+
+            //}
+            //Console.ReadKey();
             /*
             // string response = call.GetEvent(3300);
             string response2 = ApiCalls.GetRankingEvents("2016-06");
@@ -99,6 +102,11 @@ namespace LiveRanking
             //Console.WriteLine(jObject.ToString());
             
            //Console.ReadKey();+*/
+            //RankingRacesTools.DownloadRankingRaces();
+
+           Console.WriteLine(CompetitorTools.ImportRankingFromFile(_directory + "\\export_ranking_m.csv"));
+
+
         }
     }
 }

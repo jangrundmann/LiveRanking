@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
@@ -17,15 +18,14 @@ namespace BL.Repository
 
         protected virtual TDAL Map(TBLL obj)
         {
-            Mapper.CreateMap<TBLL, TDAL>();
-            return Mapper.Map<TDAL>(obj);
+            return MapperInstance.Mapper.Map<TDAL>(obj);
         }
 
         protected virtual TBLL Map(TDAL obj)
         {
-            Mapper.CreateMap<TDAL, TBLL>();
-            return Mapper.Map<TBLL>(obj);
+            return MapperInstance.Mapper.Map<TBLL>(obj);
         }
+        
 
         protected abstract IQueryable<TBLL> GetIQueryable();
 
@@ -66,6 +66,7 @@ namespace BL.Repository
 
             return obj;
         }
+
 
         public TBLL Update(TBLL obj)
         {

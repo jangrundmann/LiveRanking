@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BL.Models;
 using DAL.Config;
 using DAL.Data;
 
 namespace BL.Repository
 {
-    class CompetitorRepository : BaseRepository<CompetitorDAL,Competitor>
+    public class CompetitorRepository : BaseRepository<CompetitorDAL,Competitor>
     {
         protected override IQueryable<Competitor> GetIQueryable()
         {
@@ -27,6 +28,7 @@ namespace BL.Repository
                 });
         }
 
+      
         public CompetitorRepository(LiveRankingDb context)
         : base(context, context.Competitors)
     {

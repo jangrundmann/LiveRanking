@@ -95,12 +95,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIcalls.cs" />
     <Compile Include="Calculator.cs" />
-    <Compile Include="ParseRankingEvents.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Race.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

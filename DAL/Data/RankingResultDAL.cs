@@ -8,7 +8,6 @@ namespace DAL.Data
 {
    public class RankingResultDAL: BaseEntityDAL
     {
-        public int RankingResultId { get; set; }
         public int Points { get; set; }
         public DateTime Date { get; set; }
 

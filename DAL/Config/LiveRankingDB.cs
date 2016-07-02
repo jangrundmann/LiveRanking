@@ -12,7 +12,7 @@ namespace DAL.Config
     {
         public LiveRankingDb() : base()
         {
-            Database.SetInitializer<LiveRankingDb>(new MigrateDatabaseToLatestVersion<LiveRankingDb,Migrations.Configuration>());
+            Database.SetInitializer<LiveRankingDb>(new DropCreateDatabaseIfModelChanges<LiveRankingDb>());
         }
         public DbSet<CompetitorDAL> Competitors { get; set; }
         public DbSet<RankingRaceDAL> RankingRaces { get; set; }

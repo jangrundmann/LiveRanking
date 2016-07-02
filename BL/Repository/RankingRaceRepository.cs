@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BL.Models;
 using DAL.Config;
 using DAL.Data;
 
 namespace BL.Repository
 {
-    class RankingRaceRepository : BaseRepository<RankingRaceDAL, RankingRace>
+   public class RankingRaceRepository : BaseRepository<RankingRaceDAL, RankingRace>
     {
         protected override IQueryable<RankingRace> GetIQueryable()
         {
@@ -23,7 +24,8 @@ namespace BL.Repository
                 });
         }
 
-        public RankingRaceRepository(LiveRankingDb context)
+
+       public RankingRaceRepository(LiveRankingDb context)
         : base(context, context.RankingRaces)
         {
 
