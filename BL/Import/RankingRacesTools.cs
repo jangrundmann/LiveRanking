@@ -1,34 +1,63 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BL.JModels;
 using BL.Models;
 using BL.Repository;
 using DAL.Config;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BL.Import
 {
     public static class RankingRacesTools
     {
-        public static void DownloadRankingRaces()
+        public static List<RankingRace> DownloadRankingRaces(List<string> months)
         {
-            RankingRaceRepository rep = new RankingRaceRepository(new LiveRankingDb());
-            List<string> months = new List<string>{ "2015-05", "2015-06", "2015-07", "2015-08",
-                "2015-09" ,"2015-10" , "2015-11" , "2015-12" , "2016-01", "2016-02", "2016-03",
-                "2016-04", "2016-05", "2016-06" };
+            List < RankingRace > races = new List<RankingRace>();
+            // RankingRaceRepository rep = new RankingRaceRepository(new LiveRankingDb());
             foreach (string month in months)
             {
                 string response = ApiCalls.GetRankingEventsPageContent(month);
-                foreach (RankingRace race in GetRankingRaces(response))
-                {
-                    rep.Add(race);
-                }
+
+                races.AddRange(ParseRankingRaces(response));
             }
+            return races;
         }
 
-        public static List<RankingRace> GetRankingRaces(string page)
+        public static void SaveResults(StreamWriter output, List<RankingRace> races)
+        {
+            List<JObject> jsonRacesList = new List<JObject>();
+            foreach (var race in races)
+            {
+                if (race.HasResults)
+                {
+
+                   // List<Result> resultsClass = new List<Result>();
+                    string results = ApiCalls.GetEventResults(race.RankingRaceOrisId);
+                  /*var raceExport = JsonConvert.DeserializeObject<dynamic>(results);
+                    var data = raceExport.Data;*/
+                    
+                    
+                    JObject jsonRace = JObject.Parse(results);
+                    
+                    jsonRacesList.Add(jsonRace);
+                    /*using (output)
+                    {
+                        output.Write(results);
+                        output.WriteLine();
+                    }*/
+                }
+            }
+           
+        }
+        public static List<RankingRace> ParseRankingRaces(string page)
         {
             List<RankingRace> rankingRaces = new List<RankingRace>();
             HtmlDocument doc = new HtmlDocument();

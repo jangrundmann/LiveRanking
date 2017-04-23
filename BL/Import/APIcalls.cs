@@ -13,7 +13,7 @@ namespace BL.Import
         }
         private static string Url { get; }
 
-        private static string GetJsonReguest(string requestUrl)
+        private static string GetJsonRequest(string requestUrl)
         {
             using (var w = new WebClient())
             {
@@ -35,7 +35,7 @@ namespace BL.Import
        public static string GetRankingEventsPageContent(string yearMonth)
        {
            string address = "http://oris.orientacnisporty.cz/RankingZavody?sport=1&date=";
-           return GetJsonReguest(address+yearMonth);
+           return GetJsonRequest(address+yearMonth);
        }
         public static void GetCsosClubList()
         {
@@ -54,7 +54,7 @@ namespace BL.Import
 
         public static string GetEvent(int eventId)
         {
-            return GetJsonReguest(Url + "&method=getEvent&id=" + eventId);
+            return GetJsonRequest(Url + "&method=getEvent&id=" + eventId);
         }
 
         public static void GetEventEntries()
@@ -74,7 +74,7 @@ namespace BL.Import
 
         public static string GetEventResults(int eventId)
         {
-            return GetJsonReguest(Url + "&method=getEventResults&eventid=" + eventId);
+            return GetJsonRequest(Url + "&method=getEventResults&eventid=" + eventId);
         }
 
         public static void GetUser()

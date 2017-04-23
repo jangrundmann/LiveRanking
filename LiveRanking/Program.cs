@@ -104,9 +104,13 @@ namespace LiveRanking
            //Console.ReadKey();+*/
             //RankingRacesTools.DownloadRankingRaces();
 
-           Console.WriteLine(CompetitorTools.ImportRankingFromFile(_directory + "\\export_ranking_m.csv"));
+            //Console.WriteLine(CompetitorTools.ImportRankingFromFile(_directory + "\\export_ranking_m.csv"));
 
 
+            List<string> months = new List<string> {"2017-04"};
+            
+            StreamWriter outputFile = new StreamWriter(_directory + @"\vysledky_duben.txt");
+            RankingRacesTools.SaveResults(outputFile,RankingRacesTools.DownloadRankingRaces(months));
         }
     }
 }
