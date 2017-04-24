@@ -13,6 +13,7 @@ using DAL.Config;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.VisualBasic.FileIO;
 
 namespace BL.Import
 {
@@ -30,32 +31,54 @@ namespace BL.Import
             }
             return races;
         }
-
-        public static void SaveResults(StreamWriter output, List<RankingRace> races)
+        public static List<RaceExport> ExtractResults(List<RankingRace> races)
         {
-            List<JObject> jsonRacesList = new List<JObject>();
+            List<RaceExport> racesExport = new List<RaceExport>();
             foreach (var race in races)
             {
                 if (race.HasResults)
                 {
 
-                   // List<Result> resultsClass = new List<Result>();
                     string results = ApiCalls.GetEventResults(race.RankingRaceOrisId);
-                  /*var raceExport = JsonConvert.DeserializeObject<dynamic>(results);
-                    var data = raceExport.Data;*/
                     
-                    
+                    RaceExport raceExport = new RaceExport();
+                    List<Result> resList = new List<Result>();
+
                     JObject jsonRace = JObject.Parse(results);
-                    
-                    jsonRacesList.Add(jsonRace);
-                    /*using (output)
+
+                    raceExport.Method = (string) jsonRace["Method"];
+                    raceExport.Format = (string)jsonRace["Format"];
+                    raceExport.Status = (string)jsonRace["Status"];
+                    raceExport.ExportCreated = (string) jsonRace["ExportCreated"];
+
+                    foreach (var result in jsonRace["Data"].Children())
                     {
-                        output.Write(results);
-                        output.WriteLine();
-                    }*/
-                }
+                        Result res = new Result();
+
+                        res.ID = (string) result.First["ID"];
+                        res.ClassID = (string)result.First["ClassID"];
+                        res.ClassDesc = (string)result.First["ClassDesc"];
+                        res.Sort = (string)result.First["Sort"];
+                        res.Place = (string)result.First["Place"];
+                        res.Name = (string)result.First["Name"];
+                        res.RegNo = (string)result.First["RegNo"];
+                        res.Lic = (string)result.First["Lic"];
+                        res.ClubNameResults = (string)result.First["ClubNameResults"];
+                        res.Time = (string)result.First["Time"];
+                        res.Loss = (string)result.First["Loss"];
+                        res.StartTime = (string)result.First["StartTime"];
+                        res.FinishTime = (string)result.First["FinishTime"];
+                        res.UserID = (string)result.First["UserID"];
+                        res.ClubID = (string)result.First["ClubID"];
+
+                        resList.Add(res);
+                    }
+                    raceExport.Data = resList;
+                    racesExport.Add(raceExport);
+                }      
             }
-           
+            return racesExport;
+
         }
         public static List<RankingRace> ParseRankingRaces(string page)
         {
@@ -120,6 +143,42 @@ namespace BL.Import
 
             return aId;
         }
+
+        public static List<CompetitorRankingStanding> ParseRankingStandingsFromCsv(StreamReader csv)
+        {
+            List<CompetitorRankingStanding>standings = new List<CompetitorRankingStanding>();
+            using (TextFieldParser parser = new TextFieldParser(csv))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+                bool headrow = true;
+                while (!parser.EndOfData)
+                {
+                    //Processing row
+                    string[] fields = parser.ReadFields();
+                    if (headrow)
+                    {
+                        headrow = false;
+                        continue;
+                    }
+
+                    CompetitorRankingStanding s = new CompetitorRankingStanding
+                    {
+                        Poradi = fields[0],
+                        Prijmeni = fields[1],
+                        Jmeno = fields[2],
+                        RegNo = fields[3],
+                        Body = fields[4],
+                        Coef = fields[5],
+                        RankMinule = fields[6]
+                    };
+                    standings.Add(s);
+                }
+            }
+            csv.Close();
+            return standings;
+        }
+        
     }
 
 }

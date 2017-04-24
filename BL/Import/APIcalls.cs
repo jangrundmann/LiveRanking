@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -32,7 +33,7 @@ namespace BL.Import
             }
         }
         
-       public static string GetRankingEventsPageContent(string yearMonth)
+        public static string GetRankingEventsPageContent(string yearMonth)
        {
            string address = "http://oris.orientacnisporty.cz/RankingZavody?sport=1&date=";
            return GetJsonRequest(address+yearMonth);
@@ -130,6 +131,16 @@ namespace BL.Import
         public static void GetEventBalance()  
         {
             
-        } 
+        }
+
+        public static StreamReader GetRankingStandingsCsv(string lastDayOfMonth, string sex)
+        {
+            string url = "http://oris.orientacnisporty.cz/ranking_export?date="+lastDayOfMonth+"&sport=1&gender="+sex+"&csv=1";
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+            return new StreamReader(resp.GetResponseStream());
+            
+        }
     }
 }

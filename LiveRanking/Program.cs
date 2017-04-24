@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BL;
 using BL.Models;
 using BL.Import;
+using BL.JModels;
 using BL.Repository;
 using DAL.Config;
 using DAL.Data;
@@ -110,7 +111,11 @@ namespace LiveRanking
             List<string> months = new List<string> {"2017-04"};
             
             StreamWriter outputFile = new StreamWriter(_directory + @"\vysledky_duben.txt");
-            RankingRacesTools.SaveResults(outputFile,RankingRacesTools.DownloadRankingRaces(months));
+
+            List<RankingRace> l1 = new List<RankingRace>();
+            l1.Add(RankingRacesTools.DownloadRankingRaces(months).First());
+            List<RaceExport> l2 = RankingRacesTools.ExtractResults(l1);
+            List<CompetitorRankingStanding>l3 = RankingRacesTools.ParseRankingStandingsFromCsv(ApiCalls.GetRankingStandingsCsv("2017-03-31", "M"));
         }
     }
 }
